@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<TriggernometryExport Version="1">
+  <ExportedFolder Id="9b6de1be-d458-467b-a7d5-a39f947d740f" Name="雇员探险闹钟" Enabled="true">
+    <Folders />
+    <Triggers>
+      <Trigger Enabled="true" Name="雇员完成探险" Id="ca963cef-7540-40ac-9de1-627f47934f46" RegularExpression="^.{14} 00:0039:雇员(.*?)成功完成了探险">
+        <Actions>
+          <Action OrderNumber="1" ListVariableOp="Push" ListVariableName="idle_emp_list" ListVariableExpression="$1" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+          <Action OrderNumber="2" LogLevel="-1" MouseX="" MouseY="" UseTTSTextExpression="雇员$1已完成探险！" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="UseTTS">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+          <Action OrderNumber="3" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="7d06bcba-bb51-4b6b-8b6c-7206c9fd5204" TriggerForce="regexp" ActionType="Trigger">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+          <Action OrderNumber="4" JsonEndpointExpression="http://127.0.0.1:52022/command" JsonPayloadExpression="/echo 剩余委托数：${lvar:idle_emp_list.size}" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="GenericJson" ExecutionDelayExpression="100">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+      </Trigger>
+      <Trigger Enabled="true" Source="None" Sequential="True" IsReadme="True" Name="雇员探险提醒" Id="7d06bcba-bb51-4b6b-8b6c-7206c9fd5204" RegularExpression="" PrevActions="Interrupt" Description="检测到雇员完成探索委托时会发出语音提醒；若一直没有收取，则会间隔一定时间发出语音提醒。&#xD;&#xA;可自行修改提醒间隔，默认为600000毫秒（10分钟）。&#xD;&#xA;游戏内提醒请注意修改JSON事件的端口号。">
+        <Actions>
+          <Action OrderNumber="1" LogLevel="-1" MouseX="" MouseY="" UseTTSTextExpression="当前还有${lvar:idle_emp_list.size}个雇员空闲，没有探险任务。" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="UseTTS" ExecutionDelayExpression="600000" RefireInterrupt="True">
+            <Condition Enabled="true" Grouping="Or">
+              <ConditionSingle Enabled="true" ExpressionL="${lvar:idle_emp_list.size}" ExpressionTypeL="Numeric" ExpressionR="0" ExpressionTypeR="Numeric" ConditionType="NumericGreater" />
+            </Condition>
+            <Conditions />
+          </Action>
+          <Action OrderNumber="2" JsonEndpointExpression="http://127.0.0.1:52022/command" JsonPayloadExpression="/echo 当前还有${lvar:idle_emp_list.size}个雇员空闲，没有探险任务，请及时为雇员下达探险任务。" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="7d06bcba-bb51-4b6b-8b6c-7206c9fd5204" TriggerForce="regexp" ActionType="GenericJson">
+            <Condition Enabled="true" Grouping="And">
+              <ConditionSingle Enabled="true" ExpressionL="${lvar:idle_emp_list.size}" ExpressionTypeL="Numeric" ExpressionR="0" ExpressionTypeR="Numeric" ConditionType="NumericGreater" />
+            </Condition>
+            <Conditions />
+          </Action>
+          <Action OrderNumber="3" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerId="7d06bcba-bb51-4b6b-8b6c-7206c9fd5204" TriggerForce="regexp" ActionType="Trigger">
+            <Condition Enabled="true" Grouping="And">
+              <ConditionSingle Enabled="true" ExpressionL="${lvar:idle_emp_list.size}" ExpressionTypeL="Numeric" ExpressionR="0" ExpressionTypeR="Numeric" ConditionType="NumericGreater" />
+            </Condition>
+            <Conditions />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+      </Trigger>
+      <Trigger Enabled="true" Name="雇员出发探险" Id="46193048-7fcf-43b8-ade1-9ad2d5c95a11" RegularExpression="^.{14} 00:0c39:.*?交给(.*?)\d枚探险币">
+        <Actions>
+          <Action OrderNumber="1" ListVariableOp="Remove" ListVariableName="idle_emp_list" ListVariableIndex="${lvar:idle_emp_list.indexof($1)}" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="ListVariable">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+          <Action OrderNumber="2" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" TriggerOp="CancelTrigger" TriggerId="7d06bcba-bb51-4b6b-8b6c-7206c9fd5204" ActionType="Trigger">
+            <Condition Enabled="true" Grouping="And">
+              <ConditionSingle Enabled="true" ExpressionL="${lvar:idle_emp_list.size}" ExpressionTypeL="Numeric" ExpressionR="0" ExpressionTypeR="Numeric" ConditionType="NumericLessEqual" />
+            </Condition>
+            <Conditions />
+          </Action>
+          <Action OrderNumber="3" JsonEndpointExpression="http://127.0.0.1:52022/command" JsonPayloadExpression="/echo 剩余委托数：${lvar:idle_emp_list.size}" LogLevel="-1" MouseX="" MouseY="" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="GenericJson" ExecutionDelayExpression="100">
+            <Condition Enabled="false" Grouping="Or" />
+            <Conditions />
+          </Action>
+        </Actions>
+        <Condition Enabled="false" Grouping="Or" />
+      </Trigger>
+    </Triggers>
+  </ExportedFolder>
+</TriggernometryExport>
