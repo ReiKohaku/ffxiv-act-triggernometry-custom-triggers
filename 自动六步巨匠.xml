@@ -17,7 +17,7 @@
             <Condition Enabled="false" Grouping="Or" />
             <Conditions />
           </Action>
-          <Action OrderNumber="4" LogLevel="-1" MouseX="" MouseY="" VariableOp="SetString" VariableName="craft_step_original" VariableExpression="闲静,改革,坯料加工,比尔格的祝福,崇敬,坯料制作" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="Variable">
+          <Action OrderNumber="4" LogLevel="-1" MouseX="" MouseY="" VariableOp="SetString" VariableName="craft_step_original" VariableExpression="闲静,坯料加工,坯料加工,比尔格的祝福,崇敬,坯料制作" TextAuraFontSize="9" TextAuraFontName="宋体" ActionType="Variable">
             <Condition Enabled="false" Grouping="Or" />
             <Conditions />
           </Action>
